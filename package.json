@@ -1,0 +1,27 @@
+{
+  "name": "ajaxform",
+  "version": "1.0.0",
+  "description": "super application",
+  "main": "server.js",
+  "scripts": {
+    "test": "not server",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HoTTab1CH/ajaxform.git"
+  },
+  "keywords": [
+    "ajaxform"
+  ],
+  "author": "kushpit",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HoTTab1CH/ajaxform/issues"
+  },
+  "homepage": "https://github.com/HoTTab1CH/ajaxform#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0"
+  }
+}
