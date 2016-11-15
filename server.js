@@ -64,5 +64,5 @@ app.post("/mypost",function(req,res)
 	console.log(req.body);
 	res.send("SUCCESS!");
 })
-app.listen(8080);
+app.listen(process.env.PORT||8080);
 console.log('server is running!');
