@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript">
+		window.onload = function()
+		{
+			var active = document.querySelector("#menu ul li.active");
+			LoadData(active);
+			var ul = document.querySelector("#menu ul");
+			ul.onclick = function(event)
+			{
+				var target = event.target;
+				if(target.tagName !=='LI')
+					return;
+				active = document.querySelector("#menu ul li.active");
+				active.classList.remove("active");
+				target.classList.add("active");
+
+				LoadData(target);
+			}
+
+			postsend.onclick = function()
+			{
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST","/postsend",true);
+				var body = "myinput="+encodeURIComponent(p1.value);
+				xhr.onreadystatechange = function()
+				{
+					if (xhr.readyState == 4) 
+					{
+						alert(xhr.responseText);
+					}
+				}
+				xhr.send(body);
+				//xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+
+			}
+		}
+		function LoadData(li)
+		{
+			var xhr = new XMLHttpRequest();
+			var path;
+			if(li.innerHTML == "Перегляд")
+				path = "/list";
+			else
+				path = "/form";
+			xhr.open("GET", path);
+			xhr.send();
+			xhr.onreadystatechange = function()
+			{
+				if(xhr.readyState == 4)
+					{
+						if(li.innerHTML == "Перегляд")
+						{
+							ParseJSON(xhr.responseText,content);
+							return
+						}
+						content.innerHTML = xhr.responseText;
+					}
+			}
+		}
+
+		// function ParseJSON(file, cont)
+		// {
+		// 	cont.innerHTML ="";
+		// 	var ul = document.createElement("ul");
+		// 	cont.appendChild(ul);
+		// 	file = JSON.parse(file);
+
+		// 	for (var i = 0; i <file.length; i++) 
+		// 	{
+		// 		var li = document.createElement("li");
+		// 		ul.appendChild(li);
+		// 		li.innerHTML = file[i].firstname + " " +file[i].lastname + " " + file[i].salary;
+		// 	}
+		// }
+		function ParseJSON(file, cont)
+		{
+			file = JSON.parse(file);
+			cont.innerHTML =  "";
+			var mas = [];
+			for(var key in file[0])
+			{
+				mas.push(key);
+			}
+			mas.push("");
+			var table = document.createElement("table");
+			cont.appendChild(table);
+			var tr = document.createElement("tr");
+			table.appendChild(tr);
+			for(var i = 0; i< mas.length; i++)
+			{
+				var td = document.createElement("td");
+				td.innerHTML = mas[i];
+				td.classList.add("header");
+				tr.appendChild(td);
+			}
+
+			for(var i = 0; i< file.length; i++)
+			{
+				tr = document.createElement("tr");
+				table.appendChild(tr);
+				for(var j = 0; j < mas.length-1; j++)
+				{
+					td = document.createElement("td");
+					td.innerHTML = file[i][mas[j]];
+					tr.appendChild(td);
+				}
+				td = document.createElement("td");
+				var btnDel = document.createElement("button");
+				btnDel.innerHTML = "Delete";
+				btnDel.classList.add("btnDel");
+				td.appendChild(btnDel);
+				tr.appendChild(td);
+				btnDel.onclick = DelClick;
+			}
+
+		}//ParseJson
+
+		function GetSend()
+		{
+			var inputs = document.querySelectorAll("form input[type='text']");
+			for(var i =0; i<inputs.length; i++)
+			{
+				if(inputs[i].value =="" || inputs[i].value == " ")
+				{
+					alert("Введіть дані у всі поля");
+					return;
+				}
+			}
+
+			var xhr = new XMLHttpRequest();
+			var params = "firstname="+encodeURIComponent(firstname.value) + "&lastname="+ encodeURIComponent(lastname.value) + "&salary=" + encodeURIComponent(salary.value);
+			xhr.open("get", "/formget?" + params,true);
+			xhr.send();
+			xhr.onreadystatechange = function()
+			{
+				if(xhr.readyState == 4)
+				{
+					for(var i = 0; i< inputs.length; i++)
+						inputs[i].value = "";
+					alert(xhr.responseText);
+				}
+			}
+		}//GetSend
+
+		// function DelClick()
+		// {
+		// 	var parent = this.parentNode.parentNode;
+		// 	var id = parent.rowIndex-1;
+		// 	console.log(id);
+
+		// 	var xhr = new XMLHttpRequest();
+		// 	var params = "id="+id;
+		// 	xhr.open("get", "/del?" + params,true);
+		// 	xhr.send();
+		// 	xhr.onreadystatechange = function()
+		// 	{
+		// 		if(xhr.readyState == 4)
+		// 		{
+		// 			alert(xhr.responseText);
+		// 		}
+		// 	}
+		// }
+		function DelClick()
+		{
+			var parent = this.parentNode.parentNode;
+			var id = parent.rowIndex-1;
+
+			var xhr = new XMLHttpRequest();
+			var body = "id="+encodeURIComponent(id);
+			xhr.open("POST", "/formsend",true);
+			xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+			
+			xhr.onreadystatechange = function()
+			{
+				if(xhr.readyState == 4)
+				{
+				 ParseJSON(xhr.responseText,content);
+				}
+			}	
+			xhr.send(body);
+
+
+		}
+	</script>
+</head>
+<body>
+<div id="menu">
+	<ul>
+		<li class="active">Перегляд</li>
+		<li>Ввід</li>
+	</ul>
+</div>
+<div id="content"></div>
+
+<form id="newForm" method="GET" action="/mypost">
+	<input type="text" id="p1" name="myinput">
+	<input type="text" id="test1" name="testinput">
+	<input type="button" id="postsend" value="mybtn">
+	<input type="submit" value="get">
+</form>
+</body>
+</html>

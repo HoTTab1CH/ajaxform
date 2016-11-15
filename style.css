@@ -1,0 +1,68 @@
+*
+{
+	margin: 0;
+	padding: 0;
+}
+#menu
+{
+	width: 800px;
+	background-color: lightgreen;
+	margin: 10px auto;
+	overflow: hidden;
+}
+#content
+{
+	background-color: silver;
+}
+ul
+{
+	list-style-type: none;
+}
+#menu ul li 
+{
+	width: 100px;
+	float: left;
+	margin: 10px 0 10px 10px;
+	padding: 10px;
+	cursor: pointer;
+	background-color: yellow;
+	color: black;
+}
+#menu ul li.active
+{
+	background-color: black;
+	color: white;
+}
+
+#menu, #content
+{
+
+}
+
+.form label
+{
+	margin-top: 5px;
+	display: inline-block;
+	width: 100px;
+}
+
+table, td
+{
+	border: 1px black dotted;
+	padding: 5px;
+	font-family: verdana;
+	font-size: 13px;
+	color: blue;
+	font-weight: bold;
+}
+.header
+{
+	background-color: orange;
+	color: black;
+}
+.btnDel
+{
+	color: red;
+	padding: 1px;
+	border: 1px solid gray;
+}
